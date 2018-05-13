@@ -1,0 +1,110 @@
+#!/bin/python
+import random
+import time
+import shutil
+
+## Pool used to generate random messages, grammar is structured like NLTK
+grammar = {"S" : "VP NP | VP NP PP",
+        "VP": ["installing", "setting up", "configuring", "loading", "calculating", "integrating", "preparing", "running", "generating"],
+        "NP": "ADJ N | N",
+        "PP": "P NP",
+        "N": ["directory", "config", "configuration", "files", "library", "computer", "engine", "capacitor", "file", "layout", "system", 'processors'],
+        "ADJ": ["home", "Python", "Windows", "boot", "primary", "secondary", "non-essential", "flux", "hybrid", "keyboard", "configured", "operating"],
+        "P": ["before", "without", "without", "after", "to replace", "for"]}
+
+## Bar styles, default: [#######------]
+themes = [{'-' : '-', '#' : '#', "[" : "[", "]" : "]"},
+        {'-' : ' ', '#' : '='}]
+
+## complete any themes that did not define all variables
+for t in themes:
+    for k in themes[0].keys():
+        if k not in t.keys():
+            t[k] = themes[0][k]
+
+## Loading animations, can be lists or strings.  For percenteges, use "%NUM100", where 100 
+## is the max value and % is displayed after it as the "unit"
+animations = ["|/-\\", 
+        "%NUM100", 
+        "°NUM360", 
+        "|+-+", 
+        "⠁⠂⠄⠠⠐⠈",
+        "▁▂▃▄▅▆▇█▇▆▅▄▃▁",
+        "┤┘┴└├┌┬┐",
+        "◢◣◤◥",
+        "◰◳◲◱",
+        "▖▘▝▗",
+        "◴◷◶◵",
+        "◐◓◑◒",
+        "▉▊▋▌▍▎▏▎▍▌▋▊▉",
+        "←↖↑↗→↘↓↙"]
+
+## "Unit" to go after numbers in front of the bar
+units = ["KiB", "MiB", "GiB", "files", 'B', 'e', 'X', '', '🌵', '🅱']
+max_unit_size = max(map(lambda x: len(x), units)) + 2
+number_size = 4
+max_unit_size += number_size
+
+## Generate random sentence from grammer; recursive
+def genSent(root):
+    thing = grammar[root]
+    if type(thing) is list:
+        return random.choice(thing)
+    else:
+        out = ""
+        everything = thing.split('|')
+        stuff = [this.strip() for this in everything]
+        for k in random.choice(stuff).split(" "):
+            out += genSent(k) + " "
+        return out.strip()
+
+## Wrapper to make calling genSent easier
+def text():
+    string = genSent('S') + "..."
+    return string[0].upper() + string[1:]
+
+
+
+print(text())
+
+while True:
+    terminal_width = shutil.get_terminal_size((80, 3)).columns
+    theme = random.choice(themes)
+    animation = random.choice(animations)
+    unit = random.choice(units)
+    times = random.randrange(1, 8)
+    max_width = terminal_width - max_unit_size - 9
+    width = random.randrange(int(max_width * 0.75), max_width)
+    speed = (random.randrange(1, 100) / 100) * 0.3
+    offset = 0#min(8, terminal_width - width - max_unit_size - 8)#random.randrange(1, terminal_width - width - max_unit_size - 8)
+
+    print()
+    print(text())
+    print()
+    for x in range(times):
+
+        scale = random.randrange(1, 500)
+        speed += random.randrange(-10, 10) / 100
+        speed = abs(speed)
+
+        for n in range(width + 1):
+            bar = ""
+
+            bar += str((n/width)*scale)[:number_size].strip('.') + " " + unit + " "
+
+            bar = " " * offset + " " * (max_unit_size - len(bar)) + bar
+
+            bar += theme['[']
+            bar += theme['#'] * n
+            bar += theme['-'] * (width - n)
+            bar += theme[']']
+            if 'NUM' in animation:
+                num = int(animation.split('NUM')[1])
+                bar += ' ' + str(int((n / width) * num)) + animation.split('NUM')[0]
+            else:
+                bar += ' ' + animation[n % len(animation)]
+
+            print(bar, end=' \r')
+            time.sleep(speed)
+
+        print()
