@@ -9,7 +9,7 @@ grammar = {"S" : "VP NP | VP NP PP",
         "NP": "ADJ N | N",
         "PP": "P NP",
         "N": ["directory", "config", "configuration", "files", "library", "computer", "engine", "capacitor", "file", "layout", "system", 'processors'],
-        "ADJ": ["home", "Python", "Windows", "boot", "primary", "secondary", "non-essential", "flux", "hybrid", "keyboard", "configured", "operating"],
+        "ADJ": ["home", "Python", "Windows", "boot", "primary", "secondary", "non-essential", "flux", "hybrid", "keyboard", "configured", "operating", "quantum"],
         "P": ["before", "without", "without", "after", "to replace", "for"]}
 
 ## Bar styles, default: [#######------]
@@ -40,7 +40,7 @@ animations = ["|/-\\",
         "←↖↑↗→↘↓↙"]
 
 ## "Unit" to go after numbers in front of the bar
-units = ["KiB", "MiB", "GiB", "files", 'B', 'e', 'X', '', '🌵', '🅱']
+units = ["KiB", "MiB", "GiB", "files", 'B', 'e', 'X', '', '🌵', '🅱', 'kg']
 max_unit_size = max(map(lambda x: len(x), units)) + 2
 number_size = 4
 max_unit_size += number_size
