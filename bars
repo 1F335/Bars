@@ -64,17 +64,26 @@ def text():
     return string[0].upper() + string[1:]
 
 
+terminal_width = shutil.get_terminal_size((80, 3)).columns
+max_width = terminal_width - max_unit_size - 9
+
+def update_with_terminal():
+    global terminal_width, max_width
+    terminal_width = shutil.get_terminal_size((80, 3)).columns
+    max_width = terminal_width - max_unit_size - 9
 
 print(text())
 
 while True:
-    terminal_width = shutil.get_terminal_size((80, 3)).columns
     theme = random.choice(themes)
     animation = random.choice(animations)
     unit = random.choice(units)
+
     times = random.randrange(1, 8)
-    max_width = terminal_width - max_unit_size - 9
-    width = random.randrange(int(max_width * 0.75), max_width)
+
+    size = random.randrange(750, 1000) / 1000
+
+    countlen = random.randrange(int(max_width * 0.75), max_width)
     speed = (random.randrange(1, 100) / 100) * 0.3
     offset = 0#min(8, terminal_width - width - max_unit_size - 8)#random.randrange(1, terminal_width - width - max_unit_size - 8)
 
@@ -82,12 +91,13 @@ while True:
     print(text())
     print()
     for x in range(times):
-
         scale = random.randrange(1, 500)
         speed += random.randrange(-10, 10) / 100
         speed = abs(speed)
 
-        for n in range(width + 1):
+        for n in range(countlen + 1):
+            update_with_terminal()
+            width = int(size * max_width)
             bar = ""
 
             bar += str((n/width)*scale)[:number_size].strip('.') + " " + unit + " "
@@ -95,12 +105,12 @@ while True:
             bar = " " * offset + " " * (max_unit_size - len(bar)) + bar
 
             bar += theme['[']
-            bar += theme['#'] * n
-            bar += theme['-'] * (width - n)
+            bar += theme['#'] * int((n / countlen) * width)
+            bar += theme['-'] * int(width - int((n / countlen) * width))
             bar += theme[']']
             if 'NUM' in animation:
                 num = int(animation.split('NUM')[1])
-                bar += ' ' + str(int((n / width) * num)) + animation.split('NUM')[0]
+                bar += ' ' + str(int((n / countlen) * num)) + animation.split('NUM')[0]
             else:
                 bar += ' ' + animation[n % len(animation)]
 
