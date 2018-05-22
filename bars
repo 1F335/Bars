@@ -113,7 +113,7 @@ while True:
                 bar += ' ' + str(int((n / countlen) * num)) + animation.split('NUM')[0]
             else:
                 bar += ' ' + animation[n % len(animation)]
-
+            bar = (bar + ' ' * terminal_width)[:terminal_width - 1]
             print(bar, end=' \r')
             time.sleep(speed)
 
