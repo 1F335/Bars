@@ -2,6 +2,9 @@
 import random
 import time
 import shutil
+import sys
+
+args = sys.argv
 
 ## Pool used to generate random messages, grammar is structured like NLTK
 grammar = {"S" : "VP NP | VP NP PP",
@@ -11,6 +14,9 @@ grammar = {"S" : "VP NP | VP NP PP",
         "N": ["directory", "config", "configuration", "files", "library", "computer", "engine", "capacitor", "file", "layout", "system", 'processors'],
         "ADJ": ["home", "Python", "Windows", "boot", "primary", "secondary", "non-essential", "flux", "hybrid", "keyboard", "configured", "operating", "quantum"],
         "P": ["before", "without", "without", "after", "to replace", "for"]}
+
+if "--bs" in args:
+    grammar["PP"] = "P NP | P S"
 
 ## Bar styles, default: [#######------]
 themes = [{'-' : '-', '#' : '#', "[" : "[", "]" : "]"},
@@ -114,7 +120,7 @@ while True:
             else:
                 bar += ' ' + animation[n % len(animation)]
             bar = (bar + ' ' * terminal_width)[:terminal_width - 1]
-            print(bar, end=' \r')
+            print(bar.rstrip(), end=' \r')
             time.sleep(speed)
 
         print()
