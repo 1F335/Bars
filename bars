@@ -1,4 +1,4 @@
-#!/bin/python
+#!/usr/bin/python3
 import random
 import time
 import shutil
@@ -7,19 +7,19 @@ import sys
 args = sys.argv
 
 ## Pool used to generate random messages, grammar is structured like NLTK
-grammar = {"S" : "VP NP | VP NP PP",
-        "VP": ["installing", "setting up", "configuring", "loading", "calculating", "integrating", "preparing", "running", "generating"],
-        "NP": "ADJ N | N",
-        "PP": "P NP",
-        "N": ["directory", "config", "configuration", "files", "library", "computer", "engine", "capacitor", "file", "layout", "system", 'processors'],
-        "ADJ": ["home", "Python", "Windows", "boot", "primary", "secondary", "non-essential", "flux", "hybrid", "keyboard", "configured", "operating", "quantum"],
-        "P": ["before", "without", "without", "after", "to replace", "for"]}
+grammar = {'S' : 'VP NP | VP NP PP',
+        'VP': ['installing', 'setting up', 'configuring', 'loading', 'calculating', 'integrating', 'preparing', 'running', 'generating', 'expanding', 'decompressing', 'compressing', 'restarting'],
+        'NP': 'ADJ N | N',
+        'PP': 'P NP',
+        'N': ['directory', 'config', 'configuration', 'files', 'library', 'computer', 'engine', 'capacitor', 'file', 'layout', 'system', 'processors', 'font', 'updates'],
+        'ADJ': ['home', 'Python', 'Windows', 'boot', 'primary', 'secondary', 'non-essential', 'flux', 'hybrid', 'keyboard', 'configured', 'operating', 'quantum'],
+        'P': ['before', 'without', 'without', 'after', 'to replace', 'for']}
 
-if "--bs" in args:
-    grammar["PP"] = "P NP | P S"
+if '--bs' in args:
+    grammar['PP'] = 'P NP | P S'
 
 ## Bar styles, default: [#######------]
-themes = [{'-' : '-', '#' : '#', "[" : "[", "]" : "]"},
+themes = [{'-' : '-', '#' : '#', '[' : '[', ']' : ']'},
         {'-' : ' ', '#' : '='}]
 
 ## complete any themes that did not define all variables
@@ -28,45 +28,45 @@ for t in themes:
         if k not in t.keys():
             t[k] = themes[0][k]
 
-## Loading animations, can be lists or strings.  For percenteges, use "%NUM100", where 100 
-## is the max value and % is displayed after it as the "unit"
-animations = ["|/-\\", 
-        "%NUM100", 
-        "°NUM360", 
-        "|+-+", 
-        "⠁⠂⠄⠠⠐⠈",
-        "▁▂▃▄▅▆▇█▇▆▅▄▃▁",
-        "┤┘┴└├┌┬┐",
-        "◢◣◤◥",
-        "◰◳◲◱",
-        "▖▘▝▗",
-        "◴◷◶◵",
-        "◐◓◑◒",
-        "▉▊▋▌▍▎▏▎▍▌▋▊▉",
-        "←↖↑↗→↘↓↙"]
+## Loading animations, can be lists or strings.  For percenteges, use '%NUM100', where 100 
+## is the max value and % is displayed after it as the 'unit'
+animations = ['|/-\\', 
+        '%NUM100', 
+        '°NUM360', 
+        '|+-+', 
+        '⠁⠂⠄⠠⠐⠈',
+        '▁▂▃▄▅▆▇█▇▆▅▄▃▁',
+        '┤┘┴└├┌┬┐',
+        '◢◣◤◥',
+        '◰◳◲◱',
+        '▖▘▝▗',
+        '◴◷◶◵',
+        '◐◓◑◒',
+        '▉▊▋▌▍▎▏▎▍▌▋▊▉',
+        '←↖↑↗→↘↓↙']
 
-## "Unit" to go after numbers in front of the bar
-units = ["KiB", "MiB", "GiB", "files", 'B', 'e', 'X', '', '🌵', '🅱', 'kg']
+## 'Unit' to go after numbers in front of the bar
+units = ['KiB', 'MiB', 'GiB', 'files', 'B', 'e', 'X', '', '🌵', '🅱', 'kg']
 max_unit_size = max(map(lambda x: len(x), units)) + 2
 number_size = 4
 max_unit_size += number_size
 
-## Generate random sentence from grammer; recursive
+## Generate random sentence from grammar; recursive
 def genSent(root):
     thing = grammar[root]
     if type(thing) is list:
         return random.choice(thing)
     else:
-        out = ""
+        out = ''
         everything = thing.split('|')
         stuff = [this.strip() for this in everything]
-        for k in random.choice(stuff).split(" "):
-            out += genSent(k) + " "
+        for k in random.choice(stuff).split(' '):
+            out += genSent(k) + ' '
         return out.strip()
 
 ## Wrapper to make calling genSent easier
 def text():
-    string = genSent('S') + "..."
+    string = genSent('S') + '...'
     return string[0].upper() + string[1:]
 
 
@@ -104,11 +104,11 @@ while True:
         for n in range(countlen + 1):
             update_with_terminal()
             width = int(size * max_width)
-            bar = ""
+            bar = ''
 
-            bar += str((n/width)*scale)[:number_size].strip('.') + " " + unit + " "
+            bar += str((n/width)*scale)[:number_size].strip('.') + ' ' + unit + ' '
 
-            bar = " " * offset + " " * (max_unit_size - len(bar)) + bar
+            bar = ' ' * offset + ' ' * (max_unit_size - len(bar)) + bar
 
             bar += theme['[']
             bar += theme['#'] * int((n / countlen) * width)
